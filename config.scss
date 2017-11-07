@@ -1,0 +1,248 @@
+@charset "UTF-8";
+@import "global/functions";
+
+/*------- 配置颜色 --------*/
+$primary: #4075f7;  //主色
+$minor: #51c134;  // 次要色
+$hint: #ff6000;  // 提示色
+$info: #444444;  // 信息色
+
+$warning: #ff2626;  //警示色
+
+@mixin info_opacity($type, $opacity){
+    @if $type == 'border-color' {
+        #{$type}: rgba(red($info),green($info),blue($info), $opacity) !important;
+    }@else{
+        #{$type}: rgba(red($info),green($info),blue($info), $opacity);
+    }
+} 
+
+@mixin deepen($type, $color, $multiple){
+    #{$type}: mix($color , $color - #111111 * $multiple , 1) ;
+} 
+
+@mixin dodge($type, $color, $multiple){
+    #{$type}: mix($color , $color + #111111 * $multiple , 1) ;
+} 
+
+/*------- 滚动条颜色 --------*/
+::-webkit-scrollbar-thumb{
+    @include info_opacity(background-color, 0.3);
+    &:hover{
+        @include info_opacity(background-color, 0.5);
+    }
+}
+
+/*------------ 文字颜色 --------- */
+a,
+.g-fz-tit,
+.g-fz-tab,
+.g-fz-tab.active,
+.g-fz-txt,
+.g-fz-explain,
+.g-fz-info,
+.g-fz-tab,
+.g-fz-tab.active{
+    @include info_opacity(color, 1);
+}
+
+.g-fz-tit{
+    @include info_opacity(color, 0.8);
+}
+.g-fz-tab,
+.g-fz-explain{
+    @include info_opacity(color, 0.7);
+}
+.g-fz-info{
+    @include info_opacity(color, 0.6);
+}
+
+
+// 首选字体颜色
+a:hover,
+.active,
+.g-fz-primary,
+a:hover .g-fz-txt,
+.g-dialog a,
+.g-fz-link{color:$primary;}
+
+// 提示色
+.g-fz-hint{
+    color:$hint;
+}
+// 次要色
+.g-fz-minor{
+    color:$minor;
+}
+
+
+/*------------ 标签样式 --------- */
+.g-label{
+    background: #fff;
+    color: #999;
+    border-color: #bfbfbf;
+
+    &:hover,&.active{
+        border-color: $minor;
+        color: $minor;
+    }
+}
+
+.g-label-primary{
+    border-color: $primary;
+    color: $primary;
+
+    &:hover,&.active{
+        border-color: $primary;
+        color: $primary;
+    }
+}
+
+.g-label-minor{
+    border-color: $minor;
+    color: $minor;
+
+    &:hover,&.active{
+        border-color: $minor;
+        color: $minor;
+    }
+}
+
+.g-label-hint{
+    border-color: $hint;
+    color: $hint;
+
+    &:hover,&.active{
+        border-color: $hint;
+        color: $hint;
+    }
+}
+
+
+/*------------ 背景颜色 --------- */
+// 首选色
+.g-bg-primary{
+    background:$primary;
+}
+
+// 次要色
+.g-bg-minor{
+    background:$minor;
+}
+
+.g-bg-forbid{
+    background:#2859d0;
+}
+
+// 提醒
+.g-bg-hint{
+    background:$hint;
+}
+
+// 警告
+.g-bg-warning{
+    background:$warning;
+}
+ 
+// 内容色
+.g-bg-info{
+    @include info_opacity(background-color, 0.07);
+}
+
+
+/*------------ 按钮颜色 --------- */
+// 默认
+.g-btn-default{
+    background:#fff;
+    @include info_opacity(color, 0.7);
+    @include info_opacity(border-color, 0.6);
+}
+// 去除默认hover效果
+.g-btn-default{
+    &.g-btn-disabled:hover{
+        background:#fff;
+        @include info_opacity(color, 0.7);
+        @include info_opacity(border-color, 0.6);
+    }
+}
+// 首选项
+.g-btn-default:hover,.g-btn-primary,a.g-btn-primary{
+    background:$primary;
+    border-color:$primary !important;
+    color:#fff;
+}
+// 首选项 hover效果
+.g-btn-primary,a.g-btn-primary{
+    &:hover{
+        @include deepen(background,$primary,1);
+    }
+}
+// 首选项去除hover效果
+.g-btn-primary,a.g-btn-primary{
+    &.g-btn-disabled{
+        &:hover{
+            background:$primary;
+            border-color:$primary;
+            color:#fff;
+        }
+    }   
+}
+
+// 置灰
+.g-btn-forbid,a.g-btn-forbid{
+    @include info_opacity(background, 0.6);
+    @include info_opacity(border-color, 0.2);
+
+    color:#fff;
+
+    &:hover{
+        @include info_opacity(background, 0.6);
+        @include info_opacity(border-color, 0.2);    
+    }
+}
+
+
+// 次要
+.g-btn-minor,a.g-btn-minor{
+    background:$minor;
+    border-color:$minor;
+    color:#fff;
+}
+// 次要hover效果
+.g-btn-minor,a.g-btn-minor{
+    &:hover{
+        @include deepen(background,$minor,1);
+    }
+}
+// 次要去除hover效果
+.g-btn-minor{
+    &.g-btn-disabled{
+        &:hover{
+            background:$minor;
+            border-color:$minor;
+            color:#fff;
+        }
+    }   
+}
+
+.g-primary-active{
+    .active{
+        background:$primary;
+        border-color:$primary;
+        color:#fff;
+    }
+}
+
+/*------------ 边框颜色 --------- */
+.g-border,.g-border-default{
+    @include info_opacity(border-color, 0.3);
+}
+.g-border-primary{
+    border-color:$primary;
+} 
+
+/*---------- 组件公共 -----------*/
+.pagination a, .pagination span{@include info_opacity(color, 0.8); }
+.g-dialog .dialog-header{@include dodge(background,$primary,2);}
+.dialog-skin .skin-controller li.active,.dialog-skin .skin-controller li:hover{background:$primary;}
+.dialog-skin a{color:$primary;} 

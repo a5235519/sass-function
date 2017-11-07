@@ -1,0 +1,160 @@
+@charset "UTF-8";
+$lte7 : true;
+$prefixes : -webkit-,-moz-,-ms-,-o-,"";
+$img_path : '../../img';
+
+//REM转换
+@function rem($i){
+  @return $i/60 + rem;  // html  font-size:72px
+}
+
+@mixin opacity($opacity:0.5){
+	filter : alpha(opacity=#{round($opacity*100)});
+	opacity: $opacity;
+}
+//rgba装换成16进制，用于IE Filter，如rgba(0,0,0,0.7)=>#B3000000
+@mixin rgbaCss($red,$green,$blue,$alpha:1){
+  background:rgba($red,$green,$blue,$alpha);
+  filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr="#{ie-hex-str(rgba($red,$green,$blue,$alpha))}",endcolorstr="#{ie-hex-str(rgba($red,$green,$blue,$alpha))}");
+}
+@mixin mask(){
+	background: rgba(0,0,0,0.5);
+	filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#7A000000,endcolorstr=#7A000000);
+}
+@mixin clearfix{
+	@if $lte7{
+		*zoom:1;
+	}
+	&:before,
+	&:after{
+		content:'';
+		display: table;
+		font:0/0 a;
+	}
+	&:after{
+		clear:both;
+	}
+}
+@mixin ellipsis{
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+@mixin sprite-normal($name,$normal){
+  background-repeat: no-repeat;
+  background-image: sprite-url($normal);
+  background-position: sprite-position($normal,$name);
+  //background: url(sprite-url($normal)) no-repeat sprite-position($normal,$name);
+  height:image-height(sprite-file($normal, $name));
+  width: image-width(sprite-file($normal, $name));
+}
+
+//css3 动画
+$prefix-for-webkit:    true !default;
+$prefix-for-mozilla:   true !default;
+$prefix-for-microsoft: true !default;
+$prefix-for-opera:     true !default;
+$prefix-for-spec:      true !default;
+
+@mixin prefixer ($property, $value, $prefixes) {
+  @each $prefix in $prefixes {
+    @if $prefix == webkit {
+      @if $prefix-for-webkit {
+        -webkit-#{$property}: $value;
+      }
+    }
+    @else if $prefix == moz {
+      @if $prefix-for-mozilla {
+        -moz-#{$property}: $value;
+      }
+    }
+    @else if $prefix == ms {
+      @if $prefix-for-microsoft {
+        -ms-#{$property}: $value;
+      }
+    }
+    @else if $prefix == o {
+      @if $prefix-for-opera {
+        -o-#{$property}: $value;
+      }
+    }
+    @else if $prefix == spec {
+      @if $prefix-for-spec {
+        #{$property}: $value;
+      }
+    }
+    @else  {
+      @warn "Unrecognized prefix: #{$prefix}";
+    }
+  }
+}
+
+@mixin disable-prefix-for-all() {
+  $prefix-for-webkit:    false;
+  $prefix-for-mozilla:   false;
+  $prefix-for-microsoft: false;
+  $prefix-for-opera:     false;
+  $prefix-for-spec:      false;
+}
+// required for keyframe mixin
+@mixin keyframes($name) {
+  $original-prefix-for-webkit:    $prefix-for-webkit;
+  $original-prefix-for-mozilla:   $prefix-for-mozilla;
+  $original-prefix-for-microsoft: $prefix-for-microsoft;
+  $original-prefix-for-opera:     $prefix-for-opera;
+  $original-prefix-for-spec:      $prefix-for-spec;
+
+  @if $original-prefix-for-webkit {
+    @include disable-prefix-for-all();
+    $prefix-for-webkit: true;
+    @-webkit-keyframes #{$name} {
+      @content;
+    }
+  }
+  @if $original-prefix-for-mozilla {
+    @include disable-prefix-for-all();
+    $prefix-for-mozilla: true;
+    @-moz-keyframes #{$name} {
+      @content;
+    }
+  }
+  @if $original-prefix-for-spec {
+    @include disable-prefix-for-all();
+    $prefix-for-spec: true;
+    @keyframes #{$name} {
+      @content;
+    }
+  }
+
+  $prefix-for-webkit:    $original-prefix-for-webkit    ;
+  $prefix-for-mozilla:   $original-prefix-for-mozilla   ;
+  $prefix-for-microsoft: $original-prefix-for-microsoft ;
+  $prefix-for-opera:     $original-prefix-for-opera     ;
+  $prefix-for-spec:      $original-prefix-for-spec      ;
+}
+
+@mixin transform($property: none) {
+//  none | <transform-function>
+  @include prefixer(transform, $property, webkit moz ms o spec);
+}
+
+@mixin transition($property: none) {
+//  none | <transform-function>
+  @include prefixer(transition, $property, webkit moz ms o spec);
+}
+
+@mixin transform-origin($axes: 50%) {
+// x-axis - left | center | right  | length | %
+// y-axis - top  | center | bottom | length | %
+// z-axis -                          length
+  @include prefixer(transform-origin, $axes, webkit moz ms o spec);
+}
+
+@mixin transform-style ($style: flat) {
+  @include prefixer(transform-style, $style, webkit moz ms o spec);
+}
+
+@mixin animation ($animations) {
+  @include prefixer(animation, $animations, webkit moz spec);
+}
+
